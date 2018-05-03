@@ -4,7 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 
-class ClientSecretRequestInjection
+class PassportClientSecretProxy
 {
     protected $grant_types = ['password', 'refresh_token'];
 
