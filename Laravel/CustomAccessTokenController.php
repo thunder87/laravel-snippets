@@ -12,7 +12,11 @@ use Laravel\Passport\Http\Controllers\AccessTokenController;
 class CustomAccessTokenController extends AccessTokenController
 {
     /**
-     * Authorize a client to access the user's account.
+     * Custom accessTokenController to make it possible to pass data
+     * together with the token generated using laravel passport.
+     *
+     * To make it work, replace oauth/token route @ issueToken with
+     * this custom controller.
      *
      * @param  \Psr\Http\Message\ServerRequestInterface $request
      * @return \Illuminate\Http\Response
@@ -20,7 +24,7 @@ class CustomAccessTokenController extends AccessTokenController
     public function issueToken(ServerRequestInterface $request)
     {
         try {
-            $user = $this->addUserAndRoles($request->getParsedBody()['username']);
+            $user = $this->getUser($request->getParsedBody()['username']);
 
             $tokenResponse = parent::issueToken($request);
             $content = $tokenResponse->getContent();
@@ -55,11 +59,8 @@ class CustomAccessTokenController extends AccessTokenController
         }
     }
 
-    public function addUserAndRoles($email)
+    public function getUser($email)
     {
-        $user = User::whereEmail($email)->firstOrFail()->makeHidden(['roles', 'permissions']);
-        $user['role'] = $user->getRoleNames();
-        $user['can'] = $user->getAllPermissions()->pluck('name');
-        return $user;
+        return User::whereEmail($email)->firstOrFail();
     }
 }
