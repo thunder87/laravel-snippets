@@ -33,9 +33,10 @@ class CustomAccessTokenController extends AccessTokenController
             // Append user to the token
             $token['user'] = $user;
 
-            if (isset($token['error']))
+            if (isset($token['error'])) {
                 throw new OAuthServerException('The user credentials were incorrect.', 6, 'invalid_credentials', 401);
-
+            }
+                
             return response()->json($token);
 
         } catch (ModelNotFoundException $e) {
