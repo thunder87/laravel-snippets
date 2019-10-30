@@ -18,12 +18,10 @@ class PassportClientSecretProxy
     public function handle($request, Closure $next)
     {
         if ($request->grant_type == 'password' || $request->grant_type == 'refresh_token') {
-
             $request->request->add([
                 'client_id' => env('PASSWORD_CLIENT_ID', ''),
                 'client_secret' => env('PASSWORD_CLIENT_SECRET', '')
             ]);
-
         }
 
         return $next($request);
